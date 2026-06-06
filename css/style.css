@@ -1,0 +1,234 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-color: #000;
+    color: #fff;
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+}
+
+.flicker-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    z-index: 0;
+    opacity: 1;
+}
+
+.landing .flicker-bg {
+    background-image: url('../images/landing-bg.jpg');
+}
+
+.main .flicker-bg {
+    background-image: url('../images/landing-bg.jpg');
+    position: relative;
+    overflow: hidden;
+}
+
+.main .flicker-bg::before,
+.main .flicker-bg::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('../images/landing-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    pointer-events: none;
+    mix-blend-mode: normal;
+}
+
+.main .flicker-bg::before {
+    animation: glitch-1 2.8s infinite step-end;
+}
+
+.main .flicker-bg::after {
+    animation: glitch-2 3.5s infinite step-end;
+}
+
+.main .flicker-bg {
+    animation: glitch-base 4.1s infinite step-end;
+}
+
+@keyframes glitch-base {
+    0%   { transform: translate(0); }
+    12%  { transform: translate(0); }
+    13%  { transform: translate(12px, 2px); }
+    14%  { transform: translate(0); }
+    38%  { transform: translate(0); }
+    39%  { transform: translate(-18px, -3px); }
+    40%  { transform: translate(0); }
+    62%  { transform: translate(0); }
+    63%  { transform: translate(25px, 1px); }
+    64%  { transform: translate(0); }
+    78%  { transform: translate(0); }
+    79%  { transform: translate(-8px, 4px); }
+    80%  { transform: translate(0); }
+    100% { transform: translate(0); }
+}
+
+@keyframes glitch-1 {
+    0%   { opacity: 0; clip-path: inset(0 0 100% 0); transform: translate(0); }
+    3%   { opacity: 0.55; clip-path: inset(5% 0 90% 0); transform: translate(-30px, 1px); }
+    5%   { opacity: 0; clip-path: inset(0 0 100% 0); }
+    10%  { opacity: 0.45; clip-path: inset(18% 0 75% 0); transform: translate(40px, -2px); }
+    12%  { opacity: 0; }
+    18%  { opacity: 0.6; clip-path: inset(40% 0 52% 0); transform: translate(-20px); }
+    20%  { opacity: 0; }
+    25%  { opacity: 0.5; clip-path: inset(65% 0 28% 0); transform: translate(35px, 2px); }
+    27%  { opacity: 0; }
+    33%  { opacity: 0.4; clip-path: inset(8% 0 85% 0); transform: translate(-45px, -1px); }
+    35%  { opacity: 0; }
+    42%  { opacity: 0.55; clip-path: inset(75% 0 15% 0); transform: translate(20px); }
+    44%  { opacity: 0; }
+    50%  { opacity: 0.35; clip-path: inset(30% 0 60% 0); transform: translate(-25px, 3px); }
+    52%  { opacity: 0; }
+    60%  { opacity: 0.5; clip-path: inset(50% 0 40% 0); transform: translate(15px, -2px); }
+    62%  { opacity: 0; }
+    70%  { opacity: 0.4; clip-path: inset(12% 0 80% 0); transform: translate(-35px, 1px); }
+    72%  { opacity: 0; }
+    80%  { opacity: 0.3; clip-path: inset(85% 0 8% 0); transform: translate(30px); }
+    82%  { opacity: 0; }
+    90%  { opacity: 0.45; clip-path: inset(22% 0 68% 0); transform: translate(-15px, -3px); }
+    92%  { opacity: 0; }
+    100% { opacity: 0; clip-path: inset(0 0 100% 0); transform: translate(0); }
+}
+
+@keyframes glitch-2 {
+    0%   { opacity: 0; clip-path: inset(0 0 100% 0); transform: translate(0); }
+    5%   { opacity: 0.4; clip-path: inset(25% 0 68% 0); transform: translate(20px, -2px); }
+    7%   { opacity: 0; }
+    14%  { opacity: 0.5; clip-path: inset(60% 0 32% 0); transform: translate(-30px, 1px); }
+    16%  { opacity: 0; }
+    22%  { opacity: 0.35; clip-path: inset(10% 0 82% 0); transform: translate(45px); }
+    24%  { opacity: 0; }
+    30%  { opacity: 0.55; clip-path: inset(80% 0 12% 0); transform: translate(-20px, -3px); }
+    32%  { opacity: 0; }
+    40%  { opacity: 0.45; clip-path: inset(35% 0 55% 0); transform: translate(25px, 2px); }
+    42%  { opacity: 0; }
+    48%  { opacity: 0.3; clip-path: inset(55% 0 38% 0); transform: translate(-40px, -1px); }
+    50%  { opacity: 0; }
+    58%  { opacity: 0.5; clip-path: inset(15% 0 78% 0); transform: translate(18px, 3px); }
+    60%  { opacity: 0; }
+    68%  { opacity: 0.4; clip-path: inset(70% 0 20% 0); transform: translate(-22px); }
+    70%  { opacity: 0; }
+    76%  { opacity: 0.35; clip-path: inset(42% 0 50% 0); transform: translate(35px, -2px); }
+    78%  { opacity: 0; }
+    85%  { opacity: 0.5; clip-path: inset(5% 0 90% 0); transform: translate(-18px, 1px); }
+    87%  { opacity: 0; }
+    95%  { opacity: 0.25; clip-path: inset(88% 0 5% 0); transform: translate(12px, -3px); }
+    97%  { opacity: 0; }
+    100% { opacity: 0; clip-path: inset(0 0 100% 0); transform: translate(0); }
+}
+
+.enter-link {
+    position: fixed;
+    top: 2rem;
+    right: 2rem;
+    z-index: 10;
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.2rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.enter-link:hover {
+    opacity: 1;
+}
+
+.socials-bar {
+    position: fixed;
+    top: 2rem;
+    left: 2rem;
+    z-index: 10;
+    display: flex;
+    gap: 1.2rem;
+}
+
+.social-icon {
+    color: #fff;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+    width: 22px;
+    height: 22px;
+    display: block;
+}
+
+.social-icon:hover {
+    opacity: 1;
+}
+
+.social-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.corner-link {
+    position: fixed;
+    z-index: 10;
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.corner-link:hover {
+    opacity: 1;
+}
+
+.top-left {
+    top: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.top-right {
+    top: 2rem;
+    right: 2rem;
+}
+
+.bottom-left {
+    bottom: 2rem;
+    left: 2rem;
+}
+
+.bottom-right {
+    bottom: 2rem;
+    right: 2rem;
+}
+
+@media (max-width: 600px) {
+    .enter-link,
+    .corner-link {
+        font-size: 0.8rem;
+    }
+
+    .social-icon {
+        width: 18px;
+        height: 18px;
+    }
+
+    .top-left {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}
