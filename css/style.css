@@ -308,6 +308,51 @@ body {
     color: #ccc;
 }
 
+.shows {
+    background-color: #050505;
+}
+
+.shows-content {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    padding: 10rem 2rem 2rem;
+    text-align: center;
+}
+
+.shows-heading {
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #fff;
+    margin-bottom: 1.5rem;
+}
+
+.shows-text {
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+    color: #999;
+    margin-bottom: 1rem;
+}
+
+.shows-link {
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    color: #ccc;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color 0.3s ease;
+}
+
+.shows-link:hover {
+    color: #fff;
+}
+
 @media (max-width: 600px) {
     .enter-link,
     .corner-link {
