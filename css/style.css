@@ -181,7 +181,7 @@ body {
 
 .corner-link {
     position: fixed;
-    z-index: 10;
+    z-index: 100;
     color: #fff;
     text-decoration: none;
     font-size: 0.9rem;
@@ -189,10 +189,13 @@ body {
     text-transform: uppercase;
     opacity: 0.7;
     transition: opacity 0.3s ease;
+    cursor: pointer;
+    display: inline-block;
 }
 
 .corner-link:hover {
     opacity: 1;
+    text-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
 }
 
 .top-left {
@@ -200,6 +203,33 @@ body {
     left: 50%;
     transform: translateX(-50%);
 }
+
+.back-arrow {
+    position: fixed;
+    left: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    opacity: 0.7;
+    color: #fff;
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+}
+
+.back-arrow:hover {
+    opacity: 1;
+}
+
+.back-arrow svg {
+    width: 24px;
+    height: 24px;
+}
+
 
 .top-right {
     top: 2rem;
@@ -216,6 +246,68 @@ body {
     right: 2rem;
 }
 
+.music {
+    background-color: #050505;
+}
+
+.music .albums {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    z-index: 10;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 5rem 6rem;
+    text-align: center;
+    padding: 8rem 2rem 4rem;
+    max-width: 640px;
+    margin: 0 auto;
+}
+
+.music .album {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    align-items: center;
+    width: 200px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.album-cover {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    filter: grayscale(0.15) brightness(0.88) contrast(1.05);
+    transition: filter 0.4s ease, transform 0.4s ease;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.8);
+}
+
+.album:hover .album-cover {
+    filter: grayscale(0) brightness(1) contrast(1);
+    transform: scale(1.03);
+}
+
+.album-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #fff;
+    cursor: default;
+}
+
+.album-year {
+    font-size: 0.7rem;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #ccc;
+}
+
 @media (max-width: 600px) {
     .enter-link,
     .corner-link {
@@ -230,5 +322,33 @@ body {
     .top-left {
         left: 50%;
         transform: translateX(-50%);
+    }
+
+    .music .albums {
+        gap: 2.5rem 3rem;
+        padding: 7rem 1.5rem 3rem;
+        max-width: 420px;
+    }
+
+    .music .album {
+        width: 150px;
+    }
+
+    .album-cover {
+        width: 150px;
+        height: 150px;
+    }
+
+    .album-title {
+        font-size: 0.65rem;
+    }
+
+    .album-year {
+        font-size: 0.55rem;
+    }
+
+    .back-arrow {
+        left: 1.5rem !important;
+        transform: none !important;
     }
 }
