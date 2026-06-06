@@ -1,7 +1,13 @@
-* {
+*, *::before, *::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+html {
+    overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
 }
 
 body {
@@ -11,6 +17,8 @@ body {
     overflow: hidden;
     width: 100vw;
     height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .flicker-bg {
@@ -158,6 +166,7 @@ body {
     left: 2rem;
     z-index: 10;
     display: flex;
+    flex-direction: column;
     gap: 1.2rem;
 }
 
@@ -437,7 +446,12 @@ body {
 @media (max-width: 600px) {
     .enter-link,
     .corner-link {
-        font-size: 0.8rem;
+        font-size: 0.7rem;
+        letter-spacing: 0.05em;
+    }
+
+    .socials-bar {
+        gap: 0.8rem;
     }
 
     .social-icon {
@@ -448,21 +462,37 @@ body {
     .top-left {
         left: 50%;
         transform: translateX(-50%);
+        top: 1.2rem;
+    }
+
+    .top-right {
+        top: 1.2rem;
+        right: 1.2rem;
+    }
+
+    .bottom-left {
+        bottom: 1.2rem;
+        left: 1.2rem;
+    }
+
+    .bottom-right {
+        bottom: 1.2rem;
+        right: 1.2rem;
     }
 
     .music .albums {
         gap: 2.5rem 3rem;
-        padding: 7rem 1.5rem 3rem;
+        padding: 6rem 1rem 3rem;
         max-width: 420px;
     }
 
     .music .album {
-        width: 150px;
+        width: 140px;
     }
 
     .album-cover {
-        width: 150px;
-        height: 150px;
+        width: 140px;
+        height: 140px;
     }
 
     .album-title {
@@ -474,12 +504,46 @@ body {
     }
 
     .back-arrow {
-        left: 1.5rem !important;
-        transform: none !important;
+        left: 1rem;
+        width: 32px;
+        height: 32px;
+    }
+
+    .back-arrow svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .shows-content {
+        padding: 7rem 1.5rem 2rem;
+    }
+
+    .shows-heading {
+        font-size: 1.4rem;
+    }
+
+    .video-fullscreen iframe,
+    .video-fullscreen > div {
+        width: 400%;
+        height: 400%;
+        top: -150%;
+        left: -150%;
+    }
+
+    .video-mask {
+        display: none;
     }
 
     .yt-button {
         font-size: 0.75rem;
         padding: 0.6rem 1.2rem;
+    }
+
+    .flicker-bg {
+        background-position: center;
+        background-size: contain;
+        background-repeat: no-repeat;
+        height: 100vh;
+        height: 100svh;
     }
 }
