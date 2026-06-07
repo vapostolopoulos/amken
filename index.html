@@ -10,5 +10,12 @@
     <div class="flicker-bg" id="landingBg"></div>
     <a href="main.html" class="enter-link">Enter</a>
     <script src="js/flicker.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.body.addEventListener('click', function () {
+                window.location.href = 'main.html';
+            });
+        });
+    </script>
 </body>
 </html>
