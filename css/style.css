@@ -305,6 +305,40 @@ body {
     height: 100%;
 }
 
+.nav-links {
+    position: fixed;
+    top: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+.nav-link {
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.nav-link:hover {
+    opacity: 1;
+    text-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
+}
+
+.nav-link.active {
+    opacity: 1;
+    font-weight: 700;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+}
+
 .corner-link {
     position: fixed;
     z-index: 100;
@@ -599,9 +633,15 @@ body {
 
 @media (max-width: 600px) {
     .enter-link,
-    .corner-link {
-        font-size: 0.7rem;
+    .corner-link,
+    .nav-link {
+        font-size: 1.0rem;
         letter-spacing: 0.05em;
+    }
+
+    .nav-links {
+        gap: 1.0rem;
+        top: 1.2rem;
     }
 
     .socials-bar {
