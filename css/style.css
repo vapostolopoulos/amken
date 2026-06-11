@@ -631,6 +631,10 @@ body {
     flex-shrink: 0;
 }
 
+.yt-label-mobile {
+    display: none;
+}
+
 @media (max-width: 600px) {
     .enter-link,
     .corner-link,
@@ -740,6 +744,14 @@ body {
     .yt-button {
         font-size: 0.75rem;
         padding: 0.6rem 1.2rem;
+    }
+
+    .yt-label-desktop {
+        display: none;
+    }
+
+    .yt-label-mobile {
+        display: inline;
     }
 
     .flicker-bg {
