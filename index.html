@@ -8,13 +8,14 @@
 </head>
 <body class="landing">
     <div class="flicker-bg" id="landingBg"></div>
-    <a href="main.html" class="enter-link">Enter</a>
     <script src="js/flicker.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            document.body.addEventListener('click', function () {
-                window.location.href = 'main.html';
-            });
+            function goToMain() {
+              window.location.href = 'main.html';
+            }
+            document.body.addEventListener('click', goToMain);
+            setTimeout(goToMain, 1750);
         });
     </script>
 </body>
