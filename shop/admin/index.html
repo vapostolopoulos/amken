@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>AMKEN — Admin</title>
+    <link rel="stylesheet" href="../css/shop.css">
+    <link rel="icon" type="image/png" href="../../images/emblem.png" media="(prefers-color-scheme: light)">
+    <link rel="icon" type="image/png" href="../../images/emblem-white.png" media="(prefers-color-scheme: dark)">
+</head>
+<body>
+    <header class="shop-header">
+        <a href="../index.html">Merch</a>
+        <nav>
+            <span class="active">Products</span>
+            <button id="logout">Log out</button>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Products</h1>
+        <p><a class="button" href="edit.html">New product</a></p>
+        <p id="status" class="muted">Loading…</p>
+        <p id="error" class="error" hidden></p>
+        <table>
+            <thead>
+                <tr><th>Name</th><th class="hide-mobile">Category</th><th>Price</th><th class="hide-mobile">Stock</th><th></th></tr>
+            </thead>
+            <tbody id="rows"></tbody>
+        </table>
+    </main>
+
+    <script type="module">
+        import { api, el, formatPrice, token } from '../js/api.js'
+
+        if (!token.get()) location.replace('login.html')
+
+        document.getElementById('logout').addEventListener('click', () => {
+            token.clear()
+            location.href = 'login.html'
+        })
+
+        const status = document.getElementById('status')
+        const error = document.getElementById('error')
+        const rows = document.getElementById('rows')
+
+        async function remove(product, row) {
+            if (!confirm(`Delete "${product.name}"? This can't be undone.`)) return
+            try {
+                await api(`/api/products/${product.id}`, { method: 'DELETE' })
+                row.remove()
+            } catch (e) {
+                error.textContent = e.message
+                error.hidden = false
+            }
+        }
+
+        try {
+            const products = await api('/api/products')
+            status.textContent = products.length ? '' : 'No products yet.'
+            rows.append(...products.map((p) => {
+                const row = el('tr', {},
+                    el('td', {}, p.name),
+                    el('td', { class: 'hide-mobile' }, p.category),
+                    el('td', {}, formatPrice(p.price)),
+                    el('td', { class: 'hide-mobile' }, String(p.variants.reduce((sum, v) => sum + v.stock, 0))),
+                    el('td', {}, el('div', { class: 'actions' },
+                        el('a', { href: `edit.html?id=${p.id}` }, 'Edit'),
+                        el('button', { class: 'link', onclick: () => remove(p, row) }, 'Delete'),
+                    )),
+                )
+                return row
+            }))
+        } catch {
+            status.textContent = 'Could not load products.'
+        }
+    </script>
+</body>
+</html>

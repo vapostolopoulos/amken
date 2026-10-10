@@ -290,16 +290,6 @@ body {
     opacity: 1;
 }
 
-.store-icon {
-    opacity: 0.9;
-    transition: opacity 0.3s ease;
-    filter: invert(1) brightness(1.5);
-}
-
-.social-icon:hover .store-icon {
-    opacity: 1;
-}
-
 .social-icon svg {
     width: 100%;
     height: 100%;
@@ -662,6 +652,11 @@ body {
     .social-icon {
         width: 22px;
         height: 22px;
+    }
+
+    /* On phones the bottom bar covers scrolling content, so only the home page keeps it. */
+    body:not(.main) .socials-bar {
+        display: none;
     }
 
     .top-left {

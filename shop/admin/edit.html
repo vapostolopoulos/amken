@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>AMKEN — Edit product</title>
+    <link rel="stylesheet" href="../css/shop.css">
+    <link rel="icon" type="image/png" href="../../images/emblem.png" media="(prefers-color-scheme: light)">
+    <link rel="icon" type="image/png" href="../../images/emblem-white.png" media="(prefers-color-scheme: dark)">
+    <!-- Registers the editor on alpine:init, so it must come before Alpine. -->
+    <script type="module" src="edit.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
+</head>
+<body>
+    <header class="shop-header">
+        <a href="../index.html">Merch</a>
+        <nav><a href="index.html">Products</a></nav>
+    </header>
+
+    <main x-data="editor" x-cloak>
+        <h1 x-text="id ? 'Edit product' : 'New product'"></h1>
+        <p class="muted" x-show="loading">Loading…</p>
+        <p class="error" x-show="loadError" x-text="loadError"></p>
+
+        <form x-show="!loading && !loadError" @submit.prevent="save">
+            <label>Name <input x-model="form.name" required></label>
+            <label>Category <input x-model="form.category" required></label>
+            <label>Description <textarea x-model="form.description" required></textarea></label>
+            <label>Price (€) <input x-model="form.price" type="number" step="0.01" min="0.01" required></label>
+
+            <fieldset>
+                <legend>Variants</legend>
+                <label class="checkbox"><input type="checkbox" x-model="form.noSizes"> No sizes</label>
+                <label x-show="form.noSizes">Stock
+                    <input x-model.number="form.noSizeVariant.stock" type="number" min="0" step="1" :required="form.noSizes">
+                </label>
+                <template x-for="variant in form.sized" :key="variant.size">
+                    <label class="size-row" x-show="!form.noSizes">
+                        <span x-text="variant.size"></span>
+                        <input x-model.number="variant.stock" type="number" min="0" step="1" placeholder="Not sold">
+                    </label>
+                </template>
+            </fieldset>
+
+            <div class="error" x-show="error">
+                <span x-text="error"></span>
+                <ul x-show="fieldErrors.length">
+                    <template x-for="f in fieldErrors"><li x-text="`${f.field}: ${f.message}`"></li></template>
+                </ul>
+                <button type="button" class="link" x-show="conflict" @click="location.reload()">Reload latest version</button>
+            </div>
+
+            <div class="actions">
+                <button :disabled="saving" x-text="saving ? 'Saving…' : 'Save'"></button>
+                <a href="index.html">Cancel</a>
+            </div>
+        </form>
+    </main>
+</body>
+</html>

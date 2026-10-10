@@ -1,0 +1,389 @@
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-color: #050505;
+    color: #fff;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+    color: inherit;
+}
+
+[x-cloak] {
+    display: none !important;
+}
+
+/* Header */
+
+.shop-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 2rem;
+}
+
+.shop-header a,
+.shop-header span,
+.shop-header button {
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.shop-header a:hover,
+.shop-header button:hover,
+.shop-header .active {
+    opacity: 1;
+}
+
+.shop-header .active {
+    font-weight: 700;
+}
+
+.shop-header nav {
+    display: flex;
+    gap: 2rem;
+}
+
+/* Layout */
+
+main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 2rem 2rem 4rem;
+}
+
+h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+}
+
+.muted {
+    color: #999;
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+}
+
+.error {
+    color: #ff6b6b;
+    font-size: 0.9rem;
+    margin: 1rem 0;
+}
+
+.error ul {
+    margin: 0.5rem 0 0 1.2rem;
+}
+
+/* Product grid */
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.5rem;
+    list-style: none;
+}
+
+.product-card {
+    display: block;
+    padding: 1.5rem;
+    border: 1px solid #222;
+    text-decoration: none;
+    transition: border-color 0.3s ease;
+}
+
+.product-card:hover {
+    border-color: #666;
+}
+
+.label {
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #999;
+}
+
+.product-name {
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin: 0.5rem 0;
+}
+
+.price {
+    color: #ccc;
+}
+
+.product-card img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    margin-bottom: 1rem;
+}
+
+/* Product page */
+
+.product-detail {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2.5rem;
+}
+
+.gallery .cover {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+}
+
+.thumbs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.thumbs button {
+    padding: 0;
+    border-color: #333;
+}
+
+.thumbs img {
+    display: block;
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+}
+
+.product-detail .description {
+    color: #ccc;
+    line-height: 1.6;
+    margin: 1.5rem 0;
+    white-space: pre-line;
+}
+
+.sizes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+    margin-top: 1rem;
+}
+
+.sizes li {
+    padding: 0.5rem 1rem;
+    border: 1px solid #444;
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+}
+
+.sizes li.sold-out {
+    color: #666;
+    border-color: #222;
+    text-decoration: line-through;
+}
+
+/* Forms and buttons */
+
+button,
+.button {
+    font: inherit;
+    color: #fff;
+    background: none;
+    border: 1px solid #666;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: border-color 0.3s ease;
+}
+
+button:hover,
+.button:hover {
+    border-color: #fff;
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: wait;
+}
+
+.shop-header button {
+    border: none;
+    padding: 0;
+}
+
+button.danger {
+    border-color: #a33;
+}
+
+button.link {
+    border: none;
+    padding: 0;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+form {
+    display: grid;
+    gap: 1.25rem;
+    max-width: 560px;
+}
+
+label {
+    display: grid;
+    gap: 0.4rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #ccc;
+}
+
+input,
+select,
+textarea {
+    font: inherit;
+    font-size: 1rem;
+    color: #fff;
+    background: #111;
+    border: 1px solid #333;
+    padding: 0.6rem;
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: #999;
+}
+
+textarea {
+    min-height: 8rem;
+    resize: vertical;
+}
+
+fieldset {
+    border: 1px solid #222;
+    padding: 1rem;
+    display: grid;
+    gap: 0.75rem;
+}
+
+legend {
+    padding: 0 0.5rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #ccc;
+}
+
+.checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+.checkbox input {
+    width: 1rem;
+    height: 1rem;
+    padding: 0;
+}
+
+.size-row {
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    align-items: center;
+}
+
+.actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+/* Admin table */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    text-align: left;
+    padding: 0.75rem 0.5rem;
+    border-bottom: 1px solid #222;
+}
+
+th {
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #999;
+    font-weight: 400;
+}
+
+@media (max-width: 600px) {
+    .shop-header,
+    main {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .shop-header nav {
+        gap: 1rem;
+    }
+
+    h1 {
+        font-size: 1.3rem;
+    }
+
+    .hide-mobile {
+        display: none;
+    }
+}
+
+/* Public shop pages reuse the band site's socials bar, nav and back arrow from ../css/style.css.
+   Undo its full-screen, non-scrolling body and keep content clear of the fixed elements. */
+
+body.shop {
+    width: auto;
+    height: auto;
+    overflow: visible;
+    overflow-x: hidden;
+}
+
+.shop main {
+    max-width: 1100px;
+    padding: 7rem 5rem 4rem;
+}
+
+/* Scroll the nav away with the page so product content never slides underneath it. */
+.shop .nav-links {
+    position: absolute;
+}
+
+@media (max-width: 600px) {
+    .shop main {
+        padding: 5rem 3.25rem 3rem;
+    }
+}

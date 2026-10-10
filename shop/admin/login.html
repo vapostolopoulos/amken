@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>AMKEN — Admin login</title>
+    <link rel="stylesheet" href="../css/shop.css">
+    <link rel="icon" type="image/png" href="../../images/emblem.png" media="(prefers-color-scheme: light)">
+    <link rel="icon" type="image/png" href="../../images/emblem-white.png" media="(prefers-color-scheme: dark)">
+</head>
+<body>
+    <header class="shop-header">
+        <a href="../index.html">Merch</a>
+        <nav><span class="active">Admin</span></nav>
+    </header>
+
+    <main>
+        <h1>Admin login</h1>
+        <form id="login">
+            <label>Username <input name="username" autocomplete="username" required></label>
+            <label>Password <input name="password" type="password" autocomplete="current-password" required></label>
+            <p id="error" class="error" hidden></p>
+            <div class="actions"><button>Log in</button></div>
+        </form>
+    </main>
+
+    <script type="module">
+        import { api, token } from '../js/api.js'
+
+        const form = document.getElementById('login')
+        const error = document.getElementById('error')
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault()
+            form.querySelector('button').disabled = true
+            error.hidden = true
+            try {
+                token.clear()
+                const { token: jwt } = await api('/auth/login', {
+                    method: 'POST',
+                    body: { username: form.username.value, password: form.password.value },
+                })
+                token.set(jwt)
+                location.href = 'index.html'
+            } catch (err) {
+                error.textContent = {
+                    401: 'Wrong username or password.',
+                    429: 'Too many attempts. Wait a minute and try again.',
+                }[err.status] ?? 'Login failed. Try again later.'
+                error.hidden = false
+                form.querySelector('button').disabled = false
+            }
+        })
+    </script>
+</body>
+</html>
