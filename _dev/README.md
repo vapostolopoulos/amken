@@ -7,7 +7,7 @@ Runs the shop against a mock of the eshop API, so you can click through it witho
 Needs only `python3`. From the repo root:
 
 ```sh
-./dev/serve.sh
+./_dev/serve.sh
 ```
 
 This starts:
@@ -41,5 +41,5 @@ It keeps data in memory, so a restart resets it. It only validates an empty name
 Run only the site with `python3 -m http.server 8000`, and run the eshop backend on port 8080. The backend must allow
 CORS from `http://localhost:8000`.
 
-**Note:** GitHub Pages publishes this folder too, at `www.amken.net/dev/`. That's harmless: it contains no secrets, and
-`admin` / `admin` only works on the mock.
+**Note:** the `_` prefix keeps this folder off the live site, because GitHub Pages (Jekyll) skips folders starting
+with `_`.
