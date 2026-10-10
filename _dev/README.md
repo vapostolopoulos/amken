@@ -14,7 +14,7 @@ This starts:
 
 | What | Where |
 |---|---|
-| The site (static files) | http://localhost:8000 |
+| The site (`site_server.py`; missing pages get `404.html`, like on GitHub Pages) | http://localhost:8000 |
 | Mock API (`mock_api.py`) | http://localhost:8080 |
 
 Ctrl+C stops both.
@@ -38,7 +38,7 @@ It keeps data in memory, so a restart resets it. It only validates an empty name
 
 ## Against the real backend instead
 
-Run only the site with `python3 -m http.server 8000`, and run the eshop backend on port 8080. The backend must allow
+Run only the site with `python3 -I _dev/site_server.py` from the repo root, and run the eshop backend on port 8080. The backend must allow
 CORS from `http://localhost:8000`.
 
 **Note:** the `_` prefix keeps this folder off the live site, because GitHub Pages (Jekyll) skips folders starting

@@ -6,4 +6,4 @@ cd "$(dirname "$0")/.."
 python3 -I _dev/mock_api.py &
 MOCK=$!
 trap 'kill $MOCK' EXIT INT TERM
-python3 -m http.server 8000 --bind 127.0.0.1
+python3 -I _dev/site_server.py
