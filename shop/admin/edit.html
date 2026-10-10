@@ -11,13 +11,19 @@
     <!-- Registers the editor on alpine:init, so it must come before Alpine. -->
     <script type="module" src="edit.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"
-            integrity="sha384-l8f0VcPi/M1iHPv8egOnY/15TDwqgbOR1anMIJWvU6nLRgZVLTLSaNqi/TOoT5Fh" crossorigin="anonymous"></script>
+            integrity="sha384-l8f0VcPi/M1iHPv8egOnY/15TDwqgbOR1anMIJWvU6nLRgZVLTLSaNqi/TOoT5Fh" crossorigin="anonymous"
+            onerror="document.getElementById('editor-failed').hidden = false"></script>
 </head>
 <body>
     <header class="shop-header">
         <a href="../index.html">Merch</a>
         <nav><a href="index.html">Products</a></nav>
     </header>
+
+    <!-- Shown when Alpine is blocked (integrity mismatch) or the CDN is unreachable. -->
+    <main id="editor-failed" hidden>
+        <p class="error">The editor failed to load. Reload the page; if it keeps happening, check the browser console.</p>
+    </main>
 
     <main x-data="editor" x-cloak>
         <h1 x-text="id ? 'Edit product' : 'New product'"></h1>
