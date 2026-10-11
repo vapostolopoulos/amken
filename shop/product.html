@@ -74,6 +74,9 @@
                 note.className = cls
                 note.replaceChildren(...text)
             }
+            // Warnings go away on the next click anywhere; it runs before that click's own handler can set a new one.
+            // The "Added" confirmation stays, since clearing it would remove its View cart button mid-click.
+            document.addEventListener('pointerdown', () => note.className === 'error' && say('', ''))
             const sizeButtons = sized.map((v) =>
                 el('button', {
                     type: 'button',

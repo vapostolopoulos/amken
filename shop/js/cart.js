@@ -178,4 +178,10 @@ async function checkout() {
   }
 }
 
+// Warnings go away on the next click anywhere. pointerdown fires before the blur that commits a quantity input, so a
+// message that click triggers (or a checkout error arriving later) is set after this clears, and stays.
+document.addEventListener('pointerdown', () => {
+  note.textContent = error.textContent = ''
+})
+
 if (page) openCart()
