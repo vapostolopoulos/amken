@@ -32,7 +32,9 @@ origin.
 - 13 demo products, with the band's album art as sample photos
 - Product create, edit and delete, including the 409 when two tabs edit the same product
 - Login and 401 handling
-- `POST /api/checkout` with `{items: [{productId, size, qty}]}`, which skips Stripe and returns
+- `POST /api/shipping` with `{items, country}`, which returns `{amount}`: placeholder Greece / EU / world rates per
+  category, summed per item
+- `POST /api/checkout` with `{items: [{productId, size, qty}], country}`, which skips Stripe and returns
   `{url}` pointing at `shop/success.html`
 
 It keeps data in memory, so a restart resets it. It only validates an empty name, unlike the real API. It returns

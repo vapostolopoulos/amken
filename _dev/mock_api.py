@@ -4,6 +4,17 @@ import re
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 products = {}
+
+EU = set("AT BE BG HR CY CZ DK EE FI FR DE GR HU IE IT LV LT LU MT NL PL PT RO SK SI ES SE".split())
+# Placeholder (Greece, EU, world) rates per category; the real ones live in the BE. Unknown categories get DEFAULT.
+SHIPPING = {"T-shirts": (4, 8, 15), "Hoodies": (6, 12, 22), "Music": (4, 8, 15), "Accessories": (2, 4, 6)}
+DEFAULT = (5, 10, 20)
+
+
+def shipping(items, country):
+    zone = 0 if country == "GR" else 1 if country in EU else 2
+    return sum(SHIPPING.get(products[i["productId"]]["category"], DEFAULT)[zone] * i["qty"]
+               for i in items if i["productId"] in products)
 next_id = [1]
 next_variant_id = [1]
 
@@ -62,8 +73,14 @@ class Handler(BaseHTTPRequestHandler):
             b = self.body()
             ok = b == {"username": "admin", "password": "admin"}
             return self.reply(200, {"token": "test-jwt"}) if ok else self.reply(401)
+        if self.path == "/api/shipping":
+            b = self.body()
+            return self.reply(200, {"amount": shipping(b["items"], b["country"])})
         if self.path == "/api/checkout":
-            # The real BE reprices the cart, checks stock and returns a Stripe Checkout URL. The mock skips Stripe.
+            # The real BE reprices the cart, recomputes shipping, checks stock and returns a Stripe Checkout URL.
+            # The mock skips Stripe.
+            if not self.body().get("country"):
+                return self.reply(400, {"status": 400, "message": "country is required"})
             return self.reply(200, {"url": "http://localhost:8000/shop/success.html"})
         if not self.authed():
             return self.reply(401)
