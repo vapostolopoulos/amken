@@ -405,3 +405,11 @@ body.shop {
         padding: 5rem 3.25rem 3rem;
     }
 }
+
+.shop main.centered {
+    text-align: center;
+}
+
+.shop main.centered .muted {
+    margin-bottom: 1.5rem;
+}
