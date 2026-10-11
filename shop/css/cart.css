@@ -1,0 +1,271 @@
+/* Cart button and drawer (shop/js/cart.js), loaded on the band pages as well as the shop.
+   The band pages don't load shop.css, so the drawer's controls are styled here, scoped to it. */
+
+/* A circle, so it stays readable over the content scrolling beneath it. Vertically centered on the nav row. */
+.cart-button {
+    position: fixed;
+    top: 1.1rem;
+    right: 2rem;
+    z-index: 100;
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    padding: 0;
+    color: #fff;
+    background: #111;
+    border: 1px solid #333;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.cart-button svg {
+    display: block;
+}
+
+.cart-button::after {
+    content: attr(data-count);
+    position: absolute;
+    top: -0.25rem;
+    right: -0.25rem;
+    min-width: 1.1rem;
+    height: 1.1rem;
+    padding: 0 0.25rem;
+    border-radius: 999px;
+    background: #fff;
+    color: #050505;
+    font-size: 0.65rem;
+    font-weight: 700;
+    line-height: 1.1rem;
+    letter-spacing: 0;
+    text-align: center;
+}
+
+.cart-button[data-count=""]::after {
+    display: none;
+}
+
+.cart-drawer {
+    position: fixed;
+    inset: 0 0 0 auto;
+    width: min(420px, 100vw);
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: none;
+    border-left: 1px solid #222;
+    background: #0b0b0b;
+    color: #fff;
+    transform: translateX(100%);
+    transition: transform 0.3s ease, overlay 0.3s allow-discrete, display 0.3s allow-discrete;
+}
+
+.cart-drawer[open] {
+    transform: none;
+}
+
+@starting-style {
+    .cart-drawer[open] {
+        transform: translateX(100%);
+    }
+}
+
+.cart-drawer::backdrop {
+    background: rgb(0 0 0 / 0.6);
+}
+
+html:has(.cart-drawer[open]) {
+    overflow: hidden;
+}
+
+.cart-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    height: 100%;
+    padding: 2rem 1.5rem;
+    overflow-y: auto;
+}
+
+.cart-drawer a {
+    color: inherit;
+}
+
+.cart-drawer button {
+    font: inherit;
+    color: #fff;
+    background: none;
+    border: 1px solid #666;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+.cart-drawer button:hover {
+    border-color: #fff;
+}
+
+.cart-drawer button:disabled {
+    opacity: 0.5;
+    cursor: wait;
+}
+
+.cart-drawer button.link {
+    border: none;
+    padding: 0;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.cart-drawer input {
+    font: inherit;
+    font-size: 1rem;
+    color: #fff;
+    background: #111;
+    border: 1px solid #333;
+    padding: 0.6rem;
+}
+
+.cart-drawer input:focus {
+    outline: none;
+    border-color: #999;
+}
+
+.cart-drawer .muted {
+    color: #999;
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+}
+
+.cart-drawer .error {
+    color: #ff6b6b;
+    font-size: 0.9rem;
+}
+
+.cart-drawer .price {
+    color: #ccc;
+}
+
+.cart-drawer .actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.cart-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.cart-head h2 {
+    font-size: 1.1rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.cart-head h2 a {
+    text-decoration: none;
+}
+
+.cart-head h2 a:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+#cart-page {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Narrow the cart page's main column so the heading and cart sit centered together. */
+.shop main:has(#cart-page) {
+    max-width: 800px;
+}
+
+.shop main:has(#cart-page) h1,
+#cart-page > p {
+    text-align: center;
+}
+
+.cart-lines {
+    display: grid;
+    gap: 1.25rem;
+    list-style: none;
+}
+
+.cart-lines li {
+    display: grid;
+    grid-template-columns: 64px 1fr auto;
+    gap: 1rem;
+    align-items: start;
+}
+
+.cart-lines img {
+    display: block;
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+}
+
+.cart-lines .product-name {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+.cart-lines .actions {
+    margin-top: 0.5rem;
+}
+
+.cart-lines input {
+    width: 4.5rem;
+}
+
+.cart-footer {
+    display: grid;
+    gap: 0.75rem;
+    margin-top: auto;
+    padding-top: 1.5rem;
+    border-top: 1px solid #222;
+}
+
+.cart-footer[hidden] {
+    display: none;
+}
+
+/* Empty note and error paragraphs would still take a grid gap. shop.css also gives .error a margin. */
+.cart-footer p:empty {
+    display: none;
+}
+
+.cart-footer .error {
+    margin: 0;
+}
+
+.cart-total {
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+/* Phones: the centered nav fills the top row, so the button sits just below it. */
+@media (max-width: 600px) {
+    .cart-button {
+        top: 3.25rem;
+        right: 1rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .cart-drawer {
+        transition: none;
+    }
+}

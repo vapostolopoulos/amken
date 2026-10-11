@@ -186,17 +186,35 @@ h1 {
     margin-top: 1rem;
 }
 
-.sizes li {
+.sizes button {
     padding: 0.5rem 1rem;
-    border: 1px solid #444;
+    border-color: #444;
     font-size: 0.85rem;
     letter-spacing: 0.08em;
 }
 
-.sizes li.sold-out {
+.sizes button[aria-pressed="true"] {
+    border-color: #fff;
+    font-weight: 700;
+}
+
+.sizes button:disabled {
+    opacity: 1;
     color: #666;
     border-color: #222;
     text-decoration: line-through;
+    cursor: not-allowed;
+}
+
+.add-to-cart {
+    display: grid;
+    gap: 0.75rem;
+    justify-items: start;
+    margin-top: 2rem;
+}
+
+.add-to-cart .error {
+    margin: 0;
 }
 
 /* Forms and buttons */

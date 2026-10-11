@@ -41,6 +41,41 @@ export async function api(path, { method = 'GET', body } = {}) {
   return text ? JSON.parse(text) : null
 }
 
+const CART_KEY = 'eshop.cart'
+
+// The cart keeps only {productId, size, qty}. Names and prices come from the API, and the BE reprices at checkout.
+// size is null for products without sizes.
+export const cart = {
+  get() {
+    try {
+      return JSON.parse(localStorage.getItem(CART_KEY)) ?? []
+    } catch {
+      return []
+    }
+  },
+  set(items) {
+    localStorage.setItem(CART_KEY, JSON.stringify(items))
+    showCartCount()
+  },
+  qty: (productId, size) => cart.get().find((i) => i.productId === productId && i.size === size)?.qty ?? 0,
+  add(productId, size) {
+    const items = cart.get()
+    const item = items.find((i) => i.productId === productId && i.size === size)
+    if (item) item.qty++
+    else items.push({ productId, size, qty: 1 })
+    cart.set(items)
+  },
+}
+
+// Puts the item count on the Cart button that cart.js adds to the public shop pages.
+export function showCartCount() {
+  const button = document.getElementById('cart-button')
+  if (!button) return
+  const count = cart.get().reduce((sum, i) => sum + i.qty, 0)
+  button.dataset.count = count || ''
+  button.setAttribute('aria-label', count ? `Cart, ${count} item${count === 1 ? '' : 's'}` : 'Cart')
+}
+
 // ponytail: currency hardcoded to EUR, move to the API if the shop ever sells in more than one.
 const money = new Intl.NumberFormat('en-IE', { style: 'currency', currency: 'EUR' })
 export const formatPrice = (price) => money.format(price)

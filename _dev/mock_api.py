@@ -62,6 +62,9 @@ class Handler(BaseHTTPRequestHandler):
             b = self.body()
             ok = b == {"username": "admin", "password": "admin"}
             return self.reply(200, {"token": "test-jwt"}) if ok else self.reply(401)
+        if self.path == "/api/checkout":
+            # The real BE reprices the cart, checks stock and returns a Stripe Checkout URL. The mock skips Stripe.
+            return self.reply(200, {"url": "http://localhost:8000/shop/success.html"})
         if not self.authed():
             return self.reply(401)
         b = self.body()

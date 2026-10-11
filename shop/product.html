@@ -6,6 +6,7 @@
     <title>AMKEN — Merch</title>
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="css/shop.css">
+    <link rel="stylesheet" href="css/cart.css">
     <link rel="icon" type="image/png" href="../images/emblem.png" media="(prefers-color-scheme: light)">
     <link rel="icon" type="image/png" href="../images/emblem-white.png" media="(prefers-color-scheme: dark)">
 </head>
@@ -44,7 +45,8 @@
     </main>
 
     <script type="module">
-        import { api, el, formatPrice, SIZES } from './js/api.js'
+        import { api, cart, el, formatPrice, SIZES } from './js/api.js'
+        import { openCart } from './js/cart.js'
 
         const status = document.getElementById('status')
         const id = new URLSearchParams(location.search).get('id')
@@ -64,6 +66,32 @@
                     el('button', { onclick: () => { cover.src = src } }, el('img', { src, alt: '' })),
                 )) : null,
             )
+            // Unsized products start on their single variant; sized ones wait for a pick.
+            let picked = sized.length ? null : p.variants[0]
+            const note = el('p', { role: 'status' })
+            // Warnings show in red, confirmations in grey.
+            const say = (cls, ...text) => {
+                note.className = cls
+                note.replaceChildren(...text)
+            }
+            const sizeButtons = sized.map((v) =>
+                el('button', {
+                    type: 'button',
+                    'aria-pressed': 'false',
+                    ...(v.stock > 0 ? {} : { disabled: '' }),
+                    onclick: (e) => {
+                        picked = v
+                        sizeButtons.forEach((b) => b.setAttribute('aria-pressed', b === e.currentTarget))
+                        note.textContent = ''
+                    },
+                }, v.size),
+            )
+            function addToCart() {
+                if (!picked) return say('error', 'Pick a size.')
+                if (cart.qty(p.id, picked.size) >= picked.stock) return say('error', `Only ${picked.stock} in stock.`)
+                cart.add(p.id, picked.size)
+                say('muted', 'Added. ', el('button', { class: 'link', onclick: openCart }, 'View cart'))
+            }
             document.getElementById('product').append(
                 ...(images.length ? [gallery] : []),
                 el('div', {},
@@ -73,10 +101,12 @@
                     el('p', { class: 'description' }, p.description),
                     ...(sized.length ? [
                         el('p', { class: 'label' }, 'Sizes'),
-                        el('ul', { class: 'sizes' }, ...sized.map((v) =>
-                            el('li', { class: v.stock > 0 ? '' : 'sold-out' }, v.size),
-                        )),
-                    ] : soldOut ? [el('p', { class: 'label' }, 'Sold out')] : []),
+                        el('ul', { class: 'sizes' }, ...sizeButtons.map((b) => el('li', {}, b))),
+                    ] : []),
+                    soldOut ? el('p', { class: 'label' }, 'Sold out') : el('div', { class: 'add-to-cart' },
+                        el('button', { onclick: addToCart }, 'Add to cart'),
+                        note,
+                    ),
                 ),
             )
         } catch (e) {
