@@ -3,7 +3,12 @@
 import { LOCAL } from '../js/api.js'
 
 const PHOTOS = [
-  // '/images/products/passive-tee-front.webp',
+  '/images/products/passive-aggression-lp-red.jpg',
+  '/images/products/passive-aggression-cd.png',
+  '/images/products/theater-of-the-absurd-cd.jpg',
+  '/images/products/skull-tee.png',
+  '/images/products/skull-2-tee.png',
+  '/images/products/hoodie.png',
 ]
 
 // Locally the mock's demo products use the band's album art, so offer that too. _dev/ isn't published, and locally
