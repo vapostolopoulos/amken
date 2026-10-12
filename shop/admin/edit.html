@@ -37,6 +37,36 @@
             <label>Price (€) <input x-model="form.price" type="number" step="0.01" min="0.01" required></label>
 
             <fieldset>
+                <legend x-text="`Photos (${form.images.length}/${maxImages})`"></legend>
+                <p class="muted" x-show="!form.images.length">No photos picked. Pick up to 10 below.</p>
+                <ol class="picked-photos" x-show="form.images.length">
+                    <template x-for="(src, i) in form.images" :key="src">
+                        <li>
+                            <img :src="src" alt="">
+                            <span class="label" x-text="i === 0 ? 'Cover' : i + 1"></span>
+                            <div class="actions">
+                                <button type="button" class="link" :disabled="i === 0" @click="movePhoto(i, -1)" aria-label="Move earlier">←</button>
+                                <button type="button" class="link" :disabled="i === form.images.length - 1" @click="movePhoto(i, 1)" aria-label="Move later">→</button>
+                                <button type="button" class="link" @click="togglePhoto(src)">Remove</button>
+                            </div>
+                        </li>
+                    </template>
+                </ol>
+                <p class="muted" x-show="!photos.length">No photos in the repo yet. Add them to <code>shop/admin/photos.js</code>.</p>
+                <ul class="photo-pool">
+                    <template x-for="src in photos" :key="src">
+                        <li>
+                            <button type="button" :title="src" @click="togglePhoto(src)"
+                                    :aria-pressed="form.images.includes(src)"
+                                    :disabled="!form.images.includes(src) && form.images.length >= maxImages">
+                                <img :src="src" :alt="src" loading="lazy">
+                            </button>
+                        </li>
+                    </template>
+                </ul>
+            </fieldset>
+
+            <fieldset>
                 <legend>Variants</legend>
                 <label class="checkbox"><input type="checkbox" x-model="form.noSizes"> No sizes</label>
                 <label x-show="form.noSizes">Stock

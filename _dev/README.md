@@ -29,7 +29,8 @@ origin.
 
 ## What the mock does
 
-- 13 demo products, with the band's album art as sample photos
+- 13 demo products, with the band's album art as sample photos. On localhost the editor's photo picker also offers
+  that art (`_dev/photos.js`), on top of the real list in `shop/admin/photos.js`
 - Product create, edit and delete, including the 409 when two tabs edit the same product
 - Login and 401 handling
 - `POST /api/shipping` with `{items, country}`, which returns `{amount}`: placeholder Greece / EU / world rates per
@@ -37,8 +38,8 @@ origin.
 - `POST /api/checkout` with `{items: [{productId, size, qty}], country}`, which skips Stripe and returns
   `{url}` pointing at `shop/success.html`
 
-It keeps data in memory, so a restart resets it. It only validates an empty name, unlike the real API. It returns
-`images`, which the real API doesn't have yet.
+It keeps data in memory, so a restart resets it. It only validates an empty name and more than 10 images, unlike the
+real API.
 
 ## Against the real backend instead
 

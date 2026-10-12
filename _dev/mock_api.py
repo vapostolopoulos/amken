@@ -53,6 +53,10 @@ class Handler(BaseHTTPRequestHandler):
     def body(self):
         return json.loads(self.rfile.read(int(self.headers.get("Content-Length", 0))) or b"null")
 
+    def invalid(self, field, message):
+        self.reply(400, {"status": 400, "message": "Validation failed for one or more fields",
+                         "fieldErrors": [{"field": field, "message": message}]})
+
     def authed(self):
         return self.headers.get("Authorization") == "Bearer test-jwt"
 
@@ -86,14 +90,15 @@ class Handler(BaseHTTPRequestHandler):
             return self.reply(401)
         b = self.body()
         if not b["name"].strip():
-            return self.reply(400, {"status": 400, "message": "Validation failed for one or more fields",
-                                    "fieldErrors": [{"field": "name", "message": "name is required"}]})
+            return self.invalid("name", "name is required")
+        if len(b["images"]) > 10:
+            return self.invalid("images", "images must have at most 10 entries")
         if b.get("version") is not None:
             return self.reply(400, {"status": 400, "message": "Supplied version for product creation"})
         pid = next_id[0]
         next_id[0] += 1
         products[pid] = {"id": pid, "category": b["category"], "name": b["name"], "description": b["description"],
-                         "price": float(b["price"]), "images": b.get("images", []),
+                         "price": float(b["price"]), "images": b["images"],
                          "variants": make_variants(b["variants"]), "version": 0}
         self.reply(200, products[pid])
 
@@ -102,12 +107,14 @@ class Handler(BaseHTTPRequestHandler):
             return self.reply(401)
         pid = int(self.path.rsplit("/", 1)[1])
         b = self.body()
+        if len(b["images"]) > 10:
+            return self.invalid("images", "images must have at most 10 entries")
         p = products[pid]
         variants = make_variants(b["variants"], p["variants"])
         if b.get("version") != p["version"] or variants is None:
             return self.reply(409, {"status": 409, "message": "The resource was modified by another request."})
         products[pid] = {**p, "category": b["category"], "name": b["name"], "description": b["description"],
-                         "price": float(b["price"]), "images": b.get("images", []),
+                         "price": float(b["price"]), "images": b["images"],
                          "variants": variants, "version": p["version"] + 1}
         self.reply(200, products[pid])
 
@@ -118,8 +125,8 @@ class Handler(BaseHTTPRequestHandler):
         self.reply(200)
 
 
-# SEED: demo products so the shop isn't empty
-IMG = "http://localhost:8000/images/"
+# SEED: demo products so the shop isn't empty. Image paths are site-relative, like the ones the editor saves.
+IMG = "/images/"
 for name, cat, price, sizes, images in [
     ("Passive Tee", "T-shirts", 25, [("S", 0), ("M", 4), ("L", 2)], ["passive.jpg", "emblem-white.png", "landing-bg.jpg"]),
     ("Theater Hoodie", "Hoodies", 45, [("M", 3), ("L", 0), ("XL", 1)], ["theater.jpg", "emblem.png"]),

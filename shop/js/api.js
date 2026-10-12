@@ -1,4 +1,4 @@
-const LOCAL = ['localhost', '127.0.0.1'].includes(location.hostname)
+export const LOCAL = ['localhost', '127.0.0.1'].includes(location.hostname)
 export const API = LOCAL ? 'http://localhost:8080' : 'https://api.amken.net'
 
 export const SIZES = ['S', 'M', 'L', 'XL', 'XXL']

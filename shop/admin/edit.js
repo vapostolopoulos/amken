@@ -1,4 +1,8 @@
 import { api, token, SIZES } from '../js/api.js'
+import { loadPhotos } from './photos.js'
+
+// The BE rejects more than this with a 400.
+const MAX_IMAGES = 10
 
 if (!token.get()) location.replace('login.html')
 
@@ -11,6 +15,7 @@ const toForm = (product) => {
   return {
     ...product,
     price: product.price === '' ? '' : Number(product.price).toFixed(2),
+    images: product.images ?? [],
     noSizes: variants.some((v) => v.size === null),
     noSizeVariant: toVariant(variants.find((v) => v.size === null)),
     sized: SIZES.map((size) => toVariant(variants.find((v) => v.size === size) ?? { size, stock: '' })),
@@ -26,7 +31,7 @@ const toInput = (form) => ({
   name: form.name,
   description: form.description,
   price: form.price,
-  images: form.images ?? [], // no upload UI yet; sent back unchanged so a save never drops them
+  images: form.images,
   version: form.version ?? null,
   variants: form.noSizes ? [form.noSizeVariant] : offered(form),
 })
@@ -42,8 +47,11 @@ document.addEventListener('alpine:init', () => {
     fieldErrors: [],
     conflict: false,
     form: toForm({ category: '', name: '', description: '', price: '' }),
+    photos: [],
+    maxImages: MAX_IMAGES,
 
     async init() {
+      this.photos = await loadPhotos()
       if (this.id) {
         try {
           this.form = toForm(await api(`/api/products/${encodeURIComponent(this.id)}`))
@@ -52,6 +60,19 @@ document.addEventListener('alpine:init', () => {
         }
       }
       this.loading = false
+    },
+
+    // Clicking a photo in the pool adds it at the end, or takes it out if it's already picked.
+    togglePhoto(src) {
+      const i = this.form.images.indexOf(src)
+      if (i >= 0) this.form.images.splice(i, 1)
+      else if (this.form.images.length < MAX_IMAGES) this.form.images.push(src)
+    },
+
+    // Swaps a picked photo with its neighbour; the first one is the cover.
+    movePhoto(i, step) {
+      const images = this.form.images
+      ;[images[i], images[i + step]] = [images[i + step], images[i]]
     },
 
     async save() {
