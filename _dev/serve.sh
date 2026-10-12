@@ -6,4 +6,4 @@ cd "$(dirname "$0")/.."
 python3 -I _dev/mock_api.py &
 MOCK=$!
 trap 'kill $MOCK' EXIT INT TERM
-python3 -I _dev/site_server.py
+python3 -I _dev/site_server.py --mock

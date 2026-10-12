@@ -6,8 +6,9 @@ const PHOTOS = [
   // '/images/products/passive-tee-front.webp',
 ]
 
-// Locally the mock's demo products use the band's album art, so offer that too. _dev/ isn't published, so this import
-// only ever runs on localhost. A function rather than top-level await: edit.js must register before Alpine starts.
+// Locally the mock's demo products use the band's album art, so offer that too. _dev/ isn't published, and locally
+// site_server.py serves it only with the mock (serve.sh), so against the real backend this import 404s and is skipped.
+// A function rather than top-level await: edit.js must register before Alpine starts.
 export async function loadPhotos() {
   if (!LOCAL) return PHOTOS
   try {
