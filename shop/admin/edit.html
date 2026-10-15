@@ -89,7 +89,7 @@
             </div>
 
             <div class="actions">
-                <button :disabled="saving" x-text="saving ? 'Saving…' : 'Save'"></button>
+                <button :disabled="saving || !dirty" x-text="saving ? 'Saving…' : 'Save'"></button>
                 <a href="index.html">Cancel</a>
             </div>
         </form>

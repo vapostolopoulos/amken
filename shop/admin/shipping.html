@@ -39,6 +39,12 @@
                 fieldErrors: [],
                 categories: [],
                 productCategories: [],
+                // The rates as last loaded or saved; Save stays disabled until the form differs from them.
+                pristine: '',
+
+                get dirty() {
+                    return JSON.stringify(this.categories) !== this.pristine
+                },
 
                 async init() {
                     const [rates, products] = await Promise.allSettled([api('/api/shipping-rates'), api('/api/products')])
@@ -53,6 +59,7 @@
                     } else {
                         this.loadError = rates.reason.message
                     }
+                    this.pristine = JSON.stringify(this.categories)
                     this.loading = false
                 },
 
@@ -68,6 +75,7 @@
                     try {
                         const stored = await api('/api/shipping-rates', { method: 'PUT', body: { categories: this.categories } })
                         this.categories = sorted(stored.categories).map(toForm)
+                        this.pristine = JSON.stringify(this.categories)
                         this.notConfigured = false
                         this.saved = true
                     } catch (e) {
@@ -149,7 +157,7 @@
             </div>
 
             <div class="actions">
-                <button :disabled="saving" x-text="saving ? 'Saving…' : 'Save'"></button>
+                <button :disabled="saving || !dirty" x-text="saving ? 'Saving…' : 'Save'"></button>
                 <span class="muted" x-show="saved">Saved.</span>
             </div>
         </form>

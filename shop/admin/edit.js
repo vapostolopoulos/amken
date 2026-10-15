@@ -49,6 +49,12 @@ document.addEventListener('alpine:init', () => {
     form: toForm({ category: '', name: '', description: '', price: '' }),
     photos: [],
     maxImages: MAX_IMAGES,
+    // The form as loaded; Save stays disabled until it differs.
+    pristine: '',
+
+    get dirty() {
+      return JSON.stringify(this.form) !== this.pristine
+    },
 
     async init() {
       this.photos = await loadPhotos()
@@ -59,6 +65,7 @@ document.addEventListener('alpine:init', () => {
           this.loadError = e.status === 404 ? 'This product no longer exists.' : e.message
         }
       }
+      this.pristine = JSON.stringify(this.form)
       this.loading = false
     },
 
