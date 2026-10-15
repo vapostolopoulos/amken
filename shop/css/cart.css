@@ -291,6 +291,12 @@ html:has(.cart-drawer[open]) {
     gap: 1rem;
 }
 
+/* Red like other errors, but the same size as the other totals. */
+.cart-sums .error {
+    font-size: inherit;
+    margin: 0;
+}
+
 .cart-total {
     font-weight: 700;
     letter-spacing: 0.08em;

@@ -138,12 +138,15 @@ async function quote() {
     shipping = amount
     showTotals()
   } catch {
-    if (id === quoteId) shippingValue.textContent = 'Unavailable, try again later'
+    if (id !== quoteId) return
+    shippingValue.textContent = 'Unavailable, try again later'
+    shippingValue.classList.add('error')
   }
 }
 
 function showTotals() {
   subtotalValue.textContent = formatPrice(subtotal)
+  shippingValue.classList.toggle('error', !countrySelect.value)
   shippingValue.textContent = !countrySelect.value ? 'Pick a country' : shipping === null ? 'Calculating…' : formatPrice(shipping)
   totalValue.textContent = shipping === null ? '—' : formatPrice(subtotal + shipping)
   checkoutButton.disabled = shipping === null
