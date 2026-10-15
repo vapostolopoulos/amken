@@ -107,9 +107,10 @@ html:has(.cart-drawer[open]) {
     border-color: #fff;
 }
 
-.cart-drawer button:disabled {
+.cart-drawer button:disabled,
+#cart-page button:disabled {
     opacity: 0.5;
-    cursor: wait;
+    cursor: not-allowed;
 }
 
 .cart-drawer button.link {

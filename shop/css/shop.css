@@ -239,7 +239,7 @@ button:hover,
 
 button:disabled {
     opacity: 0.5;
-    cursor: wait;
+    cursor: not-allowed;
 }
 
 .shop-header button {
