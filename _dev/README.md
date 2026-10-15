@@ -34,8 +34,9 @@ origin.
   only the real list
 - Product create, edit and delete, including the 409 when two tabs edit the same product
 - Login and 401 handling
-- `POST /api/shipping` with `{items, country}`, which returns `{amount}`: placeholder Greece / EU / world rates per
-  category, summed per item
+- `GET` / `PUT /api/shipping-rates` (admin), seeded with placeholder rates, and `POST /api/shipping` with
+  `{items, country}`, which returns `{amount}`: the highest "first item" rate plus "each additional" for every other
+  unit
 - `POST /api/checkout` with `{items: [{productId, size, qty}], country}`, which skips Stripe and returns
   `{url}` pointing at `shop/success.html`
 

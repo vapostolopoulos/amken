@@ -6,15 +6,26 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 products = {}
 
 EU = set("AT BE BG HR CY CZ DK EE FI FR DE GR HU IE IT LV LT LU MT NL PL PT RO SK SI ES SE".split())
-# Placeholder (Greece, EU, world) rates per category; the real ones live in the BE. Unknown categories get DEFAULT.
-SHIPPING = {"T-shirts": (4, 8, 15), "Hoodies": (6, 12, 22), "Music": (4, 8, 15), "Accessories": (2, 4, 6)}
-DEFAULT = (5, 10, 20)
+ZONES = ("gr", "eu", "world")
+# Same shape as GET/PUT /api/shipping-rates. Placeholder rates; Music and Accessories fall back to default.
+rates = [{"category": c, "rates": {z: {"first": f, "additional": a} for z, (f, a) in zip(ZONES, r)}}
+         for c, r in [("default", ((5, 2), (10, 4), (20, 8))),
+                      ("T-shirts", ((4, 1.5), (8, 3), (15, 6))),
+                      ("Hoodies", ((6, 2), (12, 4), (22, 8)))]]
 
 
+# The highest "first" among all units, plus "additional" for every other unit.
 def shipping(items, country):
-    zone = 0 if country == "GR" else 1 if country in EU else 2
-    return sum(SHIPPING.get(products[i["productId"]]["category"], DEFAULT)[zone] * i["qty"]
-               for i in items if i["productId"] in products)
+    zone = "gr" if country == "GR" else "eu" if country in EU else "world"
+    by_category = {c["category"]: c["rates"][zone] for c in rates}
+    units = [by_category.get(products[i["productId"]]["category"], by_category["default"])
+             for i in items if i["productId"] in products for _ in range(i["qty"])]
+    if not units:
+        return 0
+    top = max(units, key=lambda r: r["first"])
+    return top["first"] + sum(u["additional"] for u in units) - top["additional"]
+
+
 next_id = [1]
 next_variant_id = [1]
 
@@ -64,6 +75,8 @@ class Handler(BaseHTTPRequestHandler):
         self.reply(200)
 
     def do_GET(self):
+        if self.path == "/api/shipping-rates":
+            return self.reply(200, {"categories": rates}) if self.authed() else self.reply(401)
         m = re.fullmatch(r"/api/products(?:/(\d+))?", self.path)
         if not m:
             return self.reply(404)
@@ -105,8 +118,15 @@ class Handler(BaseHTTPRequestHandler):
     def do_PUT(self):
         if not self.authed():
             return self.reply(401)
-        pid = int(self.path.rsplit("/", 1)[1])
         b = self.body()
+        if self.path == "/api/shipping-rates":
+            if "default" not in [c["category"] for c in b["categories"]]:
+                return self.reply(400, {"status": 400, "message": "The default shipping rate is required"})
+            rates[:] = [{"category": c["category"],
+                         "rates": {z: {k: float(c["rates"][z][k]) for k in ("first", "additional")} for z in ZONES}}
+                        for c in b["categories"]]
+            return self.reply(200, {"categories": rates})
+        pid = int(self.path.rsplit("/", 1)[1])
         if len(b["images"]) > 10:
             return self.invalid("images", "images must have at most 10 entries")
         p = products[pid]

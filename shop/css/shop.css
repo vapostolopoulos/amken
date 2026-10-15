@@ -338,6 +338,19 @@ legend {
     align-items: center;
 }
 
+/* Shipping rates: zone, first item, each additional */
+
+.rate-row {
+    display: grid;
+    grid-template-columns: 7rem 1fr 1fr;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.rate-row input {
+    min-width: 0;
+}
+
 /* Product editor photos */
 
 .picked-photos,

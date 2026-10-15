@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>AMKEN — Shipping</title>
+    <link rel="stylesheet" href="../css/shop.css">
+    <link rel="icon" type="image/png" href="../../images/emblem.png" media="(prefers-color-scheme: light)">
+    <link rel="icon" type="image/png" href="../../images/emblem-white.png" media="(prefers-color-scheme: dark)">
+    <!-- Registers the editor on alpine:init, so it must come before Alpine. -->
+    <script type="module">
+        import { api, token } from '../js/api.js'
+
+        if (!token.get()) location.replace('login.html')
+
+        const ZONES = [{ key: 'gr', name: 'Greece' }, { key: 'eu', name: 'EU' }, { key: 'world', name: 'Rest of world' }]
+
+        const toForm = (c) => ({
+            category: c.category,
+            rates: Object.fromEntries(ZONES.map(({ key }) => {
+                const r = c.rates?.[key]
+                return [key, { first: r ? Number(r.first).toFixed(2) : '', additional: r ? Number(r.additional).toFixed(2) : '' }]
+            })),
+        })
+
+        // The BE requires a default row; keeping it first lets the page treat row 0 as that row.
+        const sorted = (categories) => [...categories].sort((a, b) => (b.category === 'default') - (a.category === 'default'))
+
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('shipping', () => ({
+                zones: ZONES,
+                loading: true,
+                saving: false,
+                saved: false,
+                notConfigured: false,
+                loadError: '',
+                error: '',
+                fieldErrors: [],
+                categories: [],
+                productCategories: [],
+
+                async init() {
+                    const [rates, products] = await Promise.allSettled([api('/api/shipping-rates'), api('/api/products')])
+                    if (products.status === 'fulfilled') {
+                        this.productCategories = [...new Set(products.value.map((p) => p.category))].sort()
+                    }
+                    if (rates.status === 'fulfilled') {
+                        this.categories = sorted(rates.value.categories).map(toForm)
+                    } else if (rates.reason.status === 404) {
+                        this.notConfigured = true
+                        this.categories = [toForm({ category: 'default' })]
+                    } else {
+                        this.loadError = rates.reason.message
+                    }
+                    this.loading = false
+                },
+
+                add() {
+                    this.categories.push(toForm({ category: '' }))
+                },
+
+                async save() {
+                    this.error = ''
+                    this.fieldErrors = []
+                    this.saved = false
+                    this.saving = true
+                    try {
+                        const stored = await api('/api/shipping-rates', { method: 'PUT', body: { categories: this.categories } })
+                        this.categories = sorted(stored.categories).map(toForm)
+                        this.notConfigured = false
+                        this.saved = true
+                    } catch (e) {
+                        this.error = e.message
+                        this.fieldErrors = e.fieldErrors ?? []
+                    }
+                    this.saving = false
+                },
+            }))
+        })
+
+        document.getElementById('logout').addEventListener('click', () => {
+            token.clear()
+            location.href = 'login.html'
+        })
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"
+            integrity="sha384-l8f0VcPi/M1iHPv8egOnY/15TDwqgbOR1anMIJWvU6nLRgZVLTLSaNqi/TOoT5Fh" crossorigin="anonymous"
+            onerror="document.getElementById('editor-failed').hidden = false"></script>
+</head>
+<body>
+    <header class="shop-header">
+        <a href="../index.html">Merch</a>
+        <nav>
+            <a href="index.html">Products</a>
+            <span class="active">Shipping</span>
+            <button id="logout">Log out</button>
+        </nav>
+    </header>
+
+    <!-- Shown when Alpine is blocked (integrity mismatch) or the CDN is unreachable. -->
+    <main id="editor-failed" hidden>
+        <p class="error">The editor failed to load. Reload the page; if it keeps happening, check the browser console.</p>
+    </main>
+
+    <main x-data="shipping" x-cloak>
+        <h1>Shipping</h1>
+        <p class="muted">An order pays the highest "first item" rate among its items, plus "each additional" for every other item.</p>
+        <p class="muted" x-show="loading">Loading…</p>
+        <p class="error" x-show="loadError" x-text="loadError"></p>
+        <p class="error" x-show="notConfigured">Shipping rates aren't set yet, so checkout can't quote shipping. Save them below.</p>
+
+        <form x-show="!loading && !loadError" @submit.prevent="save" @input="saved = false">
+            <template x-for="(c, i) in categories" :key="i">
+                <fieldset>
+                    <!-- Not uppercased: categories match products case-sensitively, so show them as typed. -->
+                    <legend style="text-transform: none" x-text="c.category || 'New category'"></legend>
+                    <p class="muted" x-show="i === 0">Used for every category without its own rates.</p>
+                    <label x-show="i > 0">Category
+                        <input x-model="c.category" list="product-categories" :required="i > 0">
+                    </label>
+                    <div class="rate-row muted"><span></span><span>First item (€)</span><span>Each additional (€)</span></div>
+                    <template x-for="z in zones" :key="z.key">
+                        <div class="rate-row">
+                            <span x-text="z.name"></span>
+                            <input x-model="c.rates[z.key].first" type="number" min="0" step="0.01" required
+                                   :aria-label="`${z.name}, first item`">
+                            <input x-model="c.rates[z.key].additional" type="number" min="0" step="0.01" required
+                                   :aria-label="`${z.name}, each additional`">
+                        </div>
+                    </template>
+                    <div class="actions" x-show="i > 0">
+                        <button type="button" class="link" @click="categories.splice(i, 1)">Remove category</button>
+                    </div>
+                </fieldset>
+            </template>
+            <datalist id="product-categories">
+                <template x-for="name in productCategories" :key="name"><option :value="name"></option></template>
+            </datalist>
+            <div class="actions">
+                <button type="button" class="link" @click="add">Add category</button>
+            </div>
+
+            <div class="error" x-show="error">
+                <span x-text="error"></span>
+                <ul x-show="fieldErrors.length">
+                    <template x-for="f in fieldErrors"><li x-text="`${f.field}: ${f.message}`"></li></template>
+                </ul>
+            </div>
+
+            <div class="actions">
+                <button :disabled="saving" x-text="saving ? 'Saving…' : 'Save'"></button>
+                <span class="muted" x-show="saved">Saved.</span>
+            </div>
+        </form>
+    </main>
+</body>
+</html>
