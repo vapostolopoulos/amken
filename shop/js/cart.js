@@ -133,7 +133,7 @@ async function quote() {
   showTotals()
   if (!countrySelect.value) return
   try {
-    const { amount } = await api('/api/shipping', { method: 'POST', body: { items: cart.get(), country: countrySelect.value } })
+    const amount = await api('/api/shipping', { method: 'POST', body: { items: cart.get(), country: countrySelect.value } })
     if (id !== quoteId) return
     shipping = amount
     showTotals()

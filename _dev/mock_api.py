@@ -92,7 +92,7 @@ class Handler(BaseHTTPRequestHandler):
             return self.reply(200, {"token": "test-jwt"}) if ok else self.reply(401)
         if self.path == "/api/shipping":
             b = self.body()
-            return self.reply(200, {"amount": shipping(b["items"], b["country"])})
+            return self.reply(200, shipping(b["items"], b["country"]))
         if self.path == "/api/checkout":
             # The real BE reprices the cart, recomputes shipping, checks stock and returns a Stripe Checkout URL.
             # The mock skips Stripe.
